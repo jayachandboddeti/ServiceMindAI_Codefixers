@@ -250,6 +250,7 @@ export default function App() {
           <div className="bg-slate-950 p-6 rounded-xl border border-slate-800 text-center space-y-4 w-full md:w-auto">
             <div className="flex items-center justify-center space-x-2">
               <Flame className="w-8 h-8 text-amber-500 animate-bounce" />
+              
               <span className="text-4xl font-extrabold text-white">14</span>
               <span className="text-slate-400 text-sm font-medium">Day Streak</span>
             </div>
