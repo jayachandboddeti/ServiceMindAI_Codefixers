@@ -60,11 +60,11 @@ const handleEvaluate = async (text) => {
   setAiEvaluation(null);
 
   try {
-    const response = await fetch('http://localhost:5000/api/ai-assistant', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: input }),
-    });
+const response = await fetch('https://servicemindai-codefixers-3.onrender.com/api/ai-assistant', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ text: input }),
+});
 
     const data = await response.json();
     setAiEvaluation(data); // Stores { score, verdict, color, comment, followUp }
