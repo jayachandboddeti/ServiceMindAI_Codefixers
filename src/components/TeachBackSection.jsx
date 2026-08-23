@@ -52,35 +52,34 @@ export default function TeachBackSection() {
     }
   ];
 
-  const handleEvaluate = (text) => {
-    const input = text || studentInput;
-    if (!input.trim()) return;
+const handleEvaluate = async (text) => {
+  const input = text || studentInput;
+  if (!input.trim()) return;
 
-    setIsEvaluating(true);
-    setTimeout(() => {
-      const lower = input.toLowerCase();
-      let result;
+  setIsEvaluating(true);
+  setAiEvaluation(null);
 
-      if (lower.includes("equal") && (lower.includes("total") || lower.includes("whole") || lower.includes("divided") || lower.includes("pieces"))) {
-        result = samplePresets[1].analysis;
-      } else if (lower.includes("bottom") || lower.includes("down") || lower.includes("lower")) {
-        result = samplePresets[0].analysis;
-      } else if (lower.includes("ate") || lower.includes("took") || lower.includes("have")) {
-        result = samplePresets[2].analysis;
-      } else {
-        result = {
-          score: "70%",
-          verdict: "Developing Explanation",
-          color: "cyan",
-          comment: "You explained key ideas! The AI analyzes your vocabulary to verify that you understand equal shares.",
-          followUp: "Great effort explaining! Keep remembering that denominator = total equal parts."
-        };
-      }
+  try {
+    const response = await fetch('http://localhost:5000/api/ai-assistant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: input }),
+    });
 
-      setAiEvaluation(result);
-      setIsEvaluating(false);
-    }, 450);
-  };
+    const data = await response.json();
+    setAiEvaluation(data); // Stores { score, verdict, color, comment, followUp }
+  } catch (error) {
+    console.error('AI evaluation error:', error);
+    setAiEvaluation({
+      score: 'N/A',
+      verdict: 'Connection Error',
+      color: 'rose',
+      comment: 'Unable to connect to the AI Tutor backend.',
+    });
+  } finally {
+    setIsEvaluating(false);
+  }
+};
 
   return (
     <section id="teach-back" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
