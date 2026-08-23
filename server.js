@@ -100,9 +100,16 @@ app.post('/api/ai-assistant', (req, res) => {
   res.json(result);
 });
 app.use('/api/roadmaps', (req, res) => res.json({ status: 'Dynamic roadmaps endpoint ready' }));
-app.use('/api/streaks', (req, res) => res.json({ status: 'Gamified streak tracker endpoint ready' }));
-
 // Serve static frontend files (Production)
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, 'dist');
+  app.use(express.static(buildPath));
+
+  // Catch-all for React Router (Express 5 syntax)
+  app.get('/*splat', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+}
 if (process.env.NODE_ENV === 'production') {
   const buildPath = path.join(__dirname, 'dist');
   app.use(express.static(buildPath));
